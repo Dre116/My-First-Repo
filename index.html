@@ -1,487 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shoply — Stock Dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dre Codes — Login</title>
+    <link rel="Stylesheet" href="style.css" />
+  </head>
+  <body>
+       <main class="card" role="main" aria-labelledby="title">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div>
+          <h1 id="title">Dre Codes</h1>
+          <p class="sub"></p><b>Welcome to Dre Hosting Site</b></p>
+        </div>
+      </div>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="username">Username</label>
+          <div class="control">
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Enter ID"
+              autocomplete="username"
+              required
+              minlength="3"
+            />
+          </div>
+        </div>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="control">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              placeholder="Enter password"
+              autocomplete="current-password"
+              required
+              minlength="6"
+            />
+            <button
+              class="toggle-visibility"
+              type="button"
+              aria-label="Show password"
+              title="Show/Hide password"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-3a2 2 0 100-4 2 2 0 000 4z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <p id="error" class="error" role="alert">
+          Please enter a valid username (≥ 3 chars) and password (≥ 6 chars).
+        </p>
 
-  <style>
-    :root {
-      --bg: #eaf4fb;
-      --card: #ffffff;
-      --muted: #9aa8b6;
-      --accent: #0f4d7a;
-      --accent2: #2b7aa3;
-      --success: #2bb673;
-      --danger: #c0392b;
-    }
+        <div class="row">
+          <label class="checkbox">
+            <input type="checkbox" id="remember" /> Remember me
+          </label>
+          <a
+            class="link"
+            href="#"
+            onclick="window.location.href='C:/Users/USER PCS/Desktop/login page/Forgot password/Forgotpassword.html'; return false;"
+            >Forgot password?</a
+          >
+        </div>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: "Inter", sans-serif;
-      background: var(--bg);
-      color: #0b2a33;
-      display: flex;
-      min-height: 100vh;
-    }
+        <button class="btn" type="submit" id="loginBtn">
+          <span class="btn-text">Log In</span>
+          <span class="visually-hidden" id="loadingText">Loading</span>
+        </button>
+      </form>
 
-    /* Sidebar */
-    .sidebar {
-      width: 240px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
-      border-radius: 0 20px 20px 0;
-      padding: 24px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    .logo-box {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: #fff;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 20px;
-    }
-
-    .logo h2 { font-size: 22px; color: var(--accent); }
-
-    .nav a {
-      display: block;
-      padding: 10px;
-      border-radius: 8px;
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: 600;
-      margin-bottom: 6px;
-      transition: 0.3s;
-    }
-    .nav a:hover, .nav a.active {
-      background: rgba(15,77,122,0.1);
-    }
-
-    /* Main Area */
-    main {
-      flex: 1;
-      padding: 30px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .card h3 {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .card .number {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    /* Forms */
-    form {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    form input, form select, form button {
-      padding: 10px;
-      border: 1px solid #d8e3ea;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-    }
-
-    form button {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-
-    form button:hover {
-      opacity: 0.9;
-    }
-
-    /* Table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card);
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #e3edf3;
-      text-align: left;
-    }
-
-    th {
-      background: #f3f8fb;
-      font-size: 14px;
-      color: var(--accent);
-    }
-
-    td { font-size: 13px; }
-
-    .reset-btn, #exportBtn {
-      margin-top: 20px;
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    #exportBtn {
-      background: var(--success);
-      margin-left: 10px;
-    }
-
-    canvas {
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      padding: 10px;
-    }
-
-    @media (max-width: 768px) {
-      body { flex-direction: column; }
-      .sidebar { width: 100%; flex-direction: row; justify-content: space-between; border-radius: 0; }
-      main { padding: 15px; }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="sidebar">
-    <div class="logo">
-      <div class="logo-box">S</div>
-      <h2>Shoply</h2>
-    </div>
-    <nav class="nav">
-      <a href="#" class="active">Dashboard</a>
-      <a href="#">Stock</a>
-      <a href="#">Sales</a>
-      <a href="#">Reports</a>
-    </nav>
-  </div>
-
-  <main>
-    <header>
-      <h1>📦 Shoply Dashboard</h1>
-    </header>
-
-    <!-- Stats Cards -->
-    <div class="stats">
-      <div class="card"><h3>Total Stock</h3><div class="number" id="totalStock">0</div></div>
-      <div class="card"><h3>Stock Sold</h3><div class="number" id="stockSold">0</div></div>
-      <div class="card"><h3>Stock Remaining</h3><div class="number" id="stockRemaining">0</div></div>
-      <div class="card"><h3>Total Value (₦)</h3><div class="number" id="totalValue">0</div></div>
-    </div>
-
-    <!-- Add Stock Form -->
-    <form id="addStockForm">
-      <input type="text" id="itemName" placeholder="Item Name" required />
-      <input type="text" id="category" placeholder="Category" required />
-      <input type="number" id="price" placeholder="Price (₦)" required />
-      <input type="number" id="quantity" placeholder="Quantity" required />
-      <button type="submit">Add Stock</button>
-    </form>
-
-    <!-- Record Sale Form -->
-    <form id="recordSaleForm">
-      <select id="saleItem" required aria-label="Select item to sell">
-      <!-- will be populated by JS; when there are no stocks it will show 100 clickable placeholder items -->
-      </select>
-      <input type="number" id="saleQuantity" placeholder="Quantity Sold" required />
-      <button type="submit">Record Sale</button>
-    </form>
-
-    <!-- Charts -->
-    <div class="stats">
-      <canvas id="pieChart"></canvas>
-      <canvas id="barChart"></canvas>
-    </div>
-
-    <!-- Table -->
-    <table id="stockTable">
-      <thead>
-      <tr>
-        <th>Item</th>
-        <th>Category</th>
-        <th>Price (₦)</th>
-        <th>Quantity</th>
-        <th>Sold</th>
-        <th>Remaining</th>
-        <th>Total Value (₦)</th>
-      </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div>
-      <button class="reset-btn" onclick="resetData()">Reset Data</button>
-      <button id="exportBtn">Export CSV</button>
-    </div>
+      <p class="footer">
+        Don’t have an account?
+        <a
+          class="link"
+          href="#"
+          onclick="window.location.href='C:/Users/USER PCS/Desktop/login page/signup/signup.html'; return false;">Create one</a>
+              
+      </p>
     </main>
 
     <script>
-    let stocks = JSON.parse(localStorage.getItem('stocks')) || [];
-
-    const addStockForm = document.getElementById('addStockForm');
-    const recordSaleForm = document.getElementById('recordSaleForm');
-    const stockTable = document.querySelector('#stockTable tbody');
-
-    // explicit element references
-    const itemName = document.getElementById('itemName');
-    const category = document.getElementById('category');
-    const price = document.getElementById('price');
-    const quantity = document.getElementById('quantity');
-
-    const saleItemSelect = document.getElementById('saleItem');
-    const saleQuantity = document.getElementById('saleQuantity');
-
-    const totalStockEl = document.getElementById('totalStock');
-    const stockSoldEl = document.getElementById('stockSold');
-    const stockRemainingEl = document.getElementById('stockRemaining');
-    const totalValueEl = document.getElementById('totalValue');
-
-    let pieChart, barChart;
-
-    function formatCurrency(num) {
-      return `₦${num.toLocaleString()}`;
-    }
-
-    function updateDashboard() {
-      let totalStock = 0, stockSold = 0, totalValue = 0;
-
-      stocks.forEach(s => {
-      totalStock += s.quantity;
-      stockSold += s.sold;
-      totalValue += s.price * (s.quantity - s.sold);
+      const pwd = document.getElementById("password");
+      const toggle = document.querySelector(".toggle-visibility");
+      toggle.addEventListener("click", () => {
+        const isPassword = pwd.type === "password";
+        pwd.type = isPassword ? "text" : "password";
+        toggle.setAttribute(
+          "aria-label",
+          isPassword ? "Hide password" : "Show password"
+        );
       });
 
-      const stockRemaining = totalStock - stockSold;
+      const form = document.getElementById("loginForm");
+      const error = document.getElementById("error");
+      const btn = document.getElementById("loginBtn");
+      const btnText = btn.querySelector(".btn-text");
 
-      totalStockEl.textContent = totalStock;
-      stockSoldEl.textContent = stockSold;
-      stockRemainingEl.textContent = stockRemaining;
-      totalValueEl.textContent = formatCurrency(totalValue);
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        error.style.display = "none";
 
-      updateTable();
-      updateCharts(stockSold, stockRemaining);
-      updateSaleDropdown();
-      localStorage.setItem('stocks', JSON.stringify(stocks));
-    }
+        const userOk = form.username.value.trim().length >= 3;
+        const passOk = form.password.value.trim().length >= 6;
 
-    function updateTable() {
-      stockTable.innerHTML = '';
-      if (stocks.length === 0) {
-      stockTable.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#999;">No stock added yet</td></tr>`;
-      return;
-      }
+        if (!userOk || !=passOk) {
+          error.style.display = "block";
+          return;
+        }
 
-      stocks.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${item.name}</td>
-        <td>${item.category}</td>
-        <td>${formatCurrency(item.price)}</td>
-        <td>${item.quantity}</td>
-        <td>${item.sold}</td>
-        <td>${item.quantity - item.sold}</td>
-        <td>${formatCurrency(item.price * (item.quantity - item.sold))}</td>
-      `;
-      stockTable.appendChild(tr);
+        btn.disabled = true;
+        btnText.textContent = "Signing in…";
+
+        setTimeout(() => {
+          btn.disabled = false;
+          btnText.textContent = "Log In";
+          alert("Logged in! (Wire this up to your backend auth)");
+          form.reset();
+        }, 1000);
       });
-    }
-
-    function updateSaleDropdown() {
-      saleItemSelect.innerHTML = '';
-
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = 'Select item';
-      placeholder.disabled = true;
-      placeholder.selected = true;
-      saleItemSelect.appendChild(placeholder);
-
-      if (stocks.length === 0) {
-      // show 20 clickable placeholder items (enabled so user can select)
-      for (let i = 1; i <= 20; i++) {
-        const option = document.createElement('option');
-        option.value = `d-${i}`; // dummy value
-        option.textContent = `Item ${i}`;
-        option.dataset.dummy = 'true';
-        saleItemSelect.appendChild(option);
-      }
-      return;
-      }
-
-      // populate from stocks when available
-      stocks.forEach((item, index) => {
-      const option = document.createElement('option');
-      option.value = index;
-      option.textContent = item.name;
-      saleItemSelect.appendChild(option);
-      });
-    }
-
-    // optional: visual feedback when selecting (keeps simple)
-    saleItemSelect.addEventListener('change', () => {
-      // no extra behavior required; selecting works because placeholder items are enabled
-    });
-
-    addStockForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const nameVal = itemName.value.trim();
-      const categoryVal = category.value.trim();
-      const priceVal = parseFloat(price.value);
-      const qtyVal = parseInt(quantity.value, 10);
-
-      if (!nameVal || priceVal <= 0 || qtyVal <= 0) return;
-
-      stocks.push({ name: nameVal, category: categoryVal, price: priceVal, quantity: qtyVal, sold: 0 });
-      addStockForm.reset();
-      updateDashboard();
-    });
-
-    recordSaleForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const rawValue = saleItemSelect.value;
-
-      // if dummy placeholder selected, inform user to add actual stock first
-      if (rawValue.startsWith('d-')) {
-      alert('This is a placeholder item. Please add stock for this item first using the "Add Stock" form.');
-      return;
-      }
-
-      const index = parseInt(rawValue, 10);
-
-      if (isNaN(index) || index < 0 || index >= stocks.length) {
-      alert('Please select a valid stock item to record a sale.');
-      return;
-      }
-
-      const qty = parseInt(saleQuantity.value, 10);
-      const available = stocks[index].quantity - stocks[index].sold;
-
-      if (isNaN(qty) || qty <= 0 || qty > available) {
-      alert('Invalid quantity');
-      return;
-      }
-      stocks[index].sold += qty;
-      recordSaleForm.reset();
-      updateDashboard();
-    });
-
-    document.getElementById('exportBtn').addEventListener('click', () => {
-      const csv = ['Item,Category,Price,Quantity,Sold,Remaining,Total Value'];
-      stocks.forEach(s => {
-      csv.push(`${s.name},${s.category},${s.price},${s.quantity},${s.sold},${s.quantity - s.sold},${s.price * (s.quantity - s.sold)}`);
-      });
-      const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'shoply-stock.csv';
-      a.click();
-    });
-
-    function resetData() {
-      if (confirm('Are you sure you want to reset all data?')) {
-      localStorage.removeItem('stocks');
-      stocks = [];
-      updateDashboard();
-      }
-    }
-
-    function updateCharts(sold, remaining) {
-      const ctxPie = document.getElementById('pieChart').getContext('2d');
-      const ctxBar = document.getElementById('barChart').getContext('2d');
-
-      if (pieChart) pieChart.destroy();
-      if (barChart) barChart.destroy();
-
-      pieChart = new Chart(ctxPie, {
-      type: 'pie',
-      data: {
-        labels: ['Sold', 'Remaining'],
-        datasets: [{
-        data: [sold, remaining],
-        backgroundColor: ['#2bb673', '#ffce56']
-        }]
-      },
-      options: { plugins: { legend: { position: 'bottom' } } }
-      });
-
-      barChart = new Chart(ctxBar, {
-      type: 'bar',
-      data: {
-        labels: ['Stock Sold', 'Stock Remaining'],
-        datasets: [{
-        data: [sold, remaining],
-        backgroundColor: ['#2b7aa3', '#0f4d7a']
-        }]
-      },
-      options: { scales: { y: { beginAtZero: true } } }
-      });
-    }
-
-    // Initialize
-    updateDashboard();
     </script>
   </body>
-  </html>
+</html>
