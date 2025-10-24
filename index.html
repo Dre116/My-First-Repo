@@ -12,7 +12,7 @@
         <div class="brand-logo" aria-hidden="true"></div>
         <div>
           <h1 id="title">Dre Codes</h1>
-          <p class="sub"></p><b>Welcome to Dre Hosting Site</b></p>
+          <p class="sub"><b>Welcome to Dre Hosting Site</b></p>
         </div>
       </div>
       <form id="loginForm" novalidate>
@@ -68,10 +68,8 @@
           </label>
           <a
             class="link"
-            href="#"
-            a href="html/Forgotpassword.html"; return false;"
-            >Forgot password?</a
-          >
+            href="Forgotpassword.html"
+            >Forgot password?</a>
         </div>
 
         <button class="btn" type="submit" id="loginBtn">
@@ -84,8 +82,8 @@
         Don’t have an account?
         <a
           class="link"
-          href="#"
-          a href='html/Signup.html'; return false;">Create one</a>
+          href="Signup.html"
+          >Create one</a>
               
       </p>
     </main>
@@ -114,7 +112,7 @@
         const userOk = form.username.value.trim().length >= 3;
         const passOk = form.password.value.trim().length >= 6;
 
-        if (!userOk || !=passOk) {
+        if (!userOk || !passOk) {
           error.style.display = "block";
           return;
         }
